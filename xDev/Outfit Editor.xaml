@@ -1,0 +1,405 @@
+﻿<Window x:Class="xDev.OutfitEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:xDev"
+        mc:Ignorable="d"
+        Title="Outfit Editor" Height="463.668" Width="838.867" MinHeight="345" MinWidth="515" WindowStyle="None" Background="#202225" Foreground="White" FontFamily="{DynamicResource Nunito}" Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="FontFamily" Value="{DynamicResource Nunito}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="FontFamily" Value="{DynamicResource Nunito}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontFamily" Value="{DynamicResource Nunito}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="Gray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="FontFamily" Value="{DynamicResource Nunito}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <DataTemplate x:Key="clothing">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding DisplayValue}" >
+                    <TextBlock.ToolTip>
+                        <Image x:Name="imgmask"/>
+                    </TextBlock.ToolTip>
+                </TextBlock>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome     
+            GlassFrameThickness="-1" 
+            ResizeBorderThickness="5"
+            CaptionHeight="0"
+            UseAeroCaptionButtons="True"/>
+    </WindowChrome.WindowChrome>
+
+    <Grid Background="#202225" >
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="#2F3136" Height="30" MouseDown="Grid_MouseDown" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30"/>
+            </Grid.ColumnDefinitions>
+
+
+            <TextBlock Text="xDev | lUiSBOzZ_RSG" Foreground="White" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+
+            <Button x:Name="BtnMinimize" Grid.Column="2" Style="{DynamicResource TitleBarButton}" WindowChrome.IsHitTestVisibleInChrome="True" Click="BtnMinimize_Click">
+                <Path x:Name="minimizepath"  Data="M 0 0 L 6 6 L 12 0 Z" Stretch="Uniform" Stroke="White" Margin="3"/>
+            </Button>
+
+            <Button x:Name="BtnClose" Grid.Column="3" Style="{DynamicResource TitleBarButton}" WindowChrome.IsHitTestVisibleInChrome="True" Click="BtnClose_Click" >
+                <Path x:Name="closepath" Data="M0,0 L1,1 M0,1 L1,0" Stretch="Uniform" Stroke="White" Margin="3"/>
+            </Button>
+
+        </Grid>
+
+
+
+        <TabControl Background="Transparent" BorderThickness="0" x:Name="MainPages" Grid.Row="1" >
+
+            <TabItem Header="MainPage" Name="MainPage">
+
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="{StaticResource SectionBackgroundBrush}" CornerRadius="5" Padding="5" Margin="15,15,15,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <Grid Height="50">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.3*"/>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.3*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0" Margin="5 0" Height="30" >
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.5*"/>
+                                    <ColumnDefinition Width="0.5*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="0.5*"/>
+                                    <RowDefinition Height="0.5*"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Text="Status"        VerticalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
+                                <TextBlock Text="ID"            VerticalAlignment="Center" Grid.Row="1" Grid.Column="0"/>
+
+                                <TextBlock x:Name="Lblattach"   VerticalAlignment="Center" Grid.Row="0" Grid.Column="1"/>
+                                <TextBlock x:Name="Lblpid"      VerticalAlignment="Center" Grid.Row="1" Grid.Column="1"/>
+
+                            </Grid>
+
+                            <Border Grid.Column="1" Background="Transparent" Margin="5 0" Height="30" >
+                                <ComboBox x:Name="ddoutfitnumber" FontFamily="{DynamicResource Nunito}" Tag="Outfits" SelectionChanged="ddoutfitnumber_SelectionChanged" DropDownOpened="ddoutfitnumber_DropDownOpenedClosed" DisplayMemberPath="Name"/>
+                            </Border>
+
+                            <TextBox x:Name="tbspoof" Grid.Column="2" Style="{StaticResource Watermark}" ToolTip="Name Spoofer" Height="30" Margin="5 0" TextChanged="tbspoof_TextChanged" PreviewMouseDown="tbtripleclick_PreviewMouseDown"/>
+
+                        </Grid>
+                    </Border>
+
+
+
+                    <Grid x:Name="MainGrid" Grid.Row="1" >
+
+                        <Border x:Name="Main" Background="{StaticResource SectionBackgroundBrush}" CornerRadius="5" Padding="5" Margin="15,5,15,15" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" ShadowDepth="2"/>
+                            </Border.Effect>
+
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid VerticalAlignment="Center" HorizontalAlignment="Center"  Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="tbname" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Outfit Name" Height="30" Width="300" Margin="0 5" TextChanged="tbname_TextChanged" PreviewMouseDown="tbtripleclick_PreviewMouseDown"/>
+                                    <Image x:Name="ImageNameHelp" Grid.Column="1" Source="{DynamicResource help32}" Height="30" Margin="5,5,0,5" MouseUp="ImageNameHelp_MouseUp"/>
+                                </Grid>
+
+                                <TextBlock Text="Advanced" VerticalAlignment="Center" Margin="0,0,40,0" HorizontalAlignment="Right" />
+                                <CheckBox x:Name="cbadv" Height="27" Width="27" Margin="0,0,5,0" HorizontalAlignment="Right" Checked="cbadv_Checked" Unchecked="cbadv_Checked"/>
+
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" Margin="5 0">
+
+                                    <Grid>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid Grid.Column="0">
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="50"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Foreground="{DynamicResource TextColor}" FontSize="28" Text="Components" FontWeight="Bold"/>
+
+                                            <WrapPanel Orientation="Vertical" Grid.Row="1">
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbtop, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbtop" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Top" Width="210" Height="30" Margin="5 0" TextChanged="tbtop_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="Collapsed"/>
+                                                    <TextBox x:Name="tbtoptexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbtoptexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbtop2, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbtop2" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Undershirt" Width="210" Height="30" Margin="5 0" TextChanged="tbtop2_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="Collapsed"/>
+                                                    <TextBox x:Name="tbtop2texture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbtop2texture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tblegs, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tblegs" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Legs" Width="210" Height="30" Margin="5 0" TextChanged="tblegs_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="Collapsed"/>
+                                                    <TextBox x:Name="tblegstexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tblegstexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbfeet, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbfeet" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Feet" Width="210" Height="30" Margin="5 0" TextChanged="tbfeet_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="Collapsed"/>
+                                                    <TextBox x:Name="tbfeettexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbfeettexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbmisc, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbmisc" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Accessories" Width="210" Height="30" Margin="5 0" TextChanged="tbmisc_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="Collapsed"/>
+                                                    <TextBox x:Name="tbmisctexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbmisctexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbpara, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbpara" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Bags" Width="210" Height="30" Margin="5 0" TextChanged="tbpara_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="Collapsed"/>
+                                                    <TextBox x:Name="tbparatexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbparatexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbmask, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbmask" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Mask" Width="210" Height="30" Margin="5 0" TextChanged="tbmask_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="Collapsed"/>
+                                                    <TextBox x:Name="tbmasktexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbmasktexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+
+                                                
+                                                
+                                                <ComboBox Margin="2" Height="30" x:Name="ddtops" Width="250" Tag="Tops" ToolTip="Tops" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddtops_SelectionChanged" />
+                                                <ComboBox Margin="2" Height="30" x:Name="ddundershirts" Width="250" Tag="Untershirts" ToolTip="Untershirts" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddundershirts_SelectionChanged"/>
+                                                <ComboBox Margin="2" Height="30" x:Name="ddlegs" Width="250" Tag="Legs" ToolTip="Legs" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddlegs_SelectionChanged"/>
+                                                <ComboBox Margin="2" Height="30" x:Name="ddshoes" Width="250" Tag="Shoes" ToolTip="Shoes" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddshoes_SelectionChanged"/>
+                                                <ComboBox Margin="2" Height="30" x:Name="ddaccessories" Width="250" Tag="Accessories" ToolTip="Accessories" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddaccessories_SelectionChanged"/>
+                                                <ComboBox Margin="2" Height="30" x:Name="ddtorsos" Width="250" Tag="Torsos" ToolTip="Torsos" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddtorsos_SelectionChanged"/>
+                                                <ComboBox Margin="2" Height="30" x:Name="ddmask" Width="250" Tag="Mask" ToolTip="Mask" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddmask_SelectionChanged"/>
+                                                <ComboBox Margin="2" Height="30" x:Name="ddhair" Width="250" Tag="Hair" ToolTip="Hair" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddhair_SelectionChanged"/>
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbgloves, Path=Visibility}" >
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbgloves" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Gloves" Width="210" Height="30" Margin="5 0" TextChanged="tbgloves_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"  Visibility="Collapsed"/>
+                                                    <TextBox x:Name="tbglovestexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbglovestexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbdecals, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbdecals" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Decals" Width="210" Height="30" Margin="5 0" TextChanged="tbdecals_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                    <TextBox x:Name="tbdecalstexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbdecalstexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+                                                
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbarmor, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbarmor" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Armor" Width="210" Height="30" Margin="5 0" TextChanged="tbarmor_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                    <TextBox x:Name="tbarmortexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbarmortexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+
+
+                                            </WrapPanel>
+
+                                        </Grid>
+
+                                        <Grid Grid.Column="1">
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="50"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Foreground="{DynamicResource TextColor}" FontSize="28" Text="Props" FontWeight="Bold"/>
+
+                                            <WrapPanel Orientation="Vertical" Grid.Row="1">
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbhat, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbhat" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Hats" Width="210" Height="30" Margin="5 0" TextChanged="tbhat_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="Collapsed"/>
+                                                    <TextBox x:Name="tbhattexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbhattexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbglasses, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbglasses" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Glasses" Width="210" Height="30" Margin="5 0" TextChanged="tbglasses_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="Collapsed"/>
+                                                    <TextBox x:Name="tbglassestexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbglassestexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbears, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbears" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Ears" Width="210" Height="30" Margin="5 0" TextChanged="tbears_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="Collapsed"/>
+                                                    <TextBox x:Name="tbearstexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbearstexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
+                                                </Grid>
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbwatches, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbwatches" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Watches" Width="210" Height="30" Margin="5 0" TextChanged="tbwatches_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="Collapsed"/>
+                                                    <TextBox x:Name="tbwatchestexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbwatchestexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="{Binding ElementName=tbwatches, Path=Visibility}"/>
+                                                </Grid>
+
+                                                <ComboBox Margin="2" Height="30" x:Name="ddbracelets" Width="250" Tag="Bracelets" ToolTip="Bracelets" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddbracelets_SelectionChanged"/>
+                                                <ComboBox Margin="2" Height="30" x:Name="ddears" Width="250" Tag="Ears" ToolTip="Ears" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddears_SelectionChanged"/>
+                                                <ComboBox Margin="2" Height="30" x:Name="ddglasses" Width="250" Tag="Glasses" ToolTip="Glasses" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddglasses_SelectionChanged"/>
+                                                <ComboBox Margin="2" Height="30" x:Name="ddhats" Width="250" Tag="Hats" ToolTip="Hats" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddhats_SelectionChanged"/>
+                                                <ComboBox Margin="2" Height="30" x:Name="ddwatches" Width="250" Tag="Watches" ToolTip="Watches" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddwatches_SelectionChanged"/>
+
+
+                                            </WrapPanel>
+                                        </Grid>
+
+                                    </Grid>
+
+                                </ScrollViewer>
+                            </Grid>
+
+                        </Border>
+
+                        <Grid Background="{DynamicResource BackgroundBrush}" Visibility="Collapsed" x:Name="ScreenMessage" Grid.Row="0" Grid.RowSpan="2" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.2*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                                <ColumnDefinition Width="0.2*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.2*"/>
+                                <RowDefinition Height="0.6*"/>
+                                <RowDefinition Height="0.2*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.Triggers>
+                                <EventTrigger RoutedEvent="Grid.Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation From="0" To="5" Duration="00:00:03" Storyboard.TargetName="blurEffect" Storyboard.TargetProperty="Radius"></DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Grid.Triggers>
+                            <Border Opacity="0.1" Grid.RowSpan="3" Grid.ColumnSpan="3">
+                                <Border.Effect>
+                                    <BlurEffect Radius="5" x:Name="blurEffect"/>
+                                </Border.Effect>
+                                <Border.Background>
+                                    <VisualBrush  Visual="{Binding ElementName=Main}" Stretch="None" />
+                                </Border.Background>
+                            </Border>
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" x:Name="ScreenMessageContainer" >
+
+                                <TextBlock Text="Select an Outfit" Foreground="White" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                            </Grid>
+                        </Grid>
+
+                    </Grid>
+
+
+                </Grid>
+
+            </TabItem>
+
+            <TabItem Header="startgta" Name="PageSGTA">
+
+                <TextBlock Text="Please Start GTA" Foreground="Red" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+            </TabItem>
+
+        </TabControl>
+
+    </Grid>
+</Window>

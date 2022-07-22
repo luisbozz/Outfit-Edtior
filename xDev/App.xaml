@@ -1,0 +1,44 @@
+﻿<Application x:Class="xDev.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:xDev"
+             StartupUri="Outfit Editor.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <BitmapImage x:Key="help32" UriSource="Resources/Help_32px.png" />
+            <SolidColorBrush x:Key="SelectedBackgroundBrush" Color="#FF232529" />
+            <SolidColorBrush x:Key="HoverBackgroundBrush" Color="#FF2A2C30" />
+            <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
+            <SolidColorBrush x:Key="ButtonHoverBackgroundBrush" Color="#34373C" />
+            <SolidColorBrush x:Key="ButtonClickBackgroundBrush" Color="#37393F" />
+            <SolidColorBrush x:Key="BackgroundBrush" Color="#202225" />
+            <SolidColorBrush x:Key="SeactionHeaderBackgroundBrush" Color="#36393F" />
+            <SolidColorBrush x:Key="TextBoxBackground" Color="#FF303339" />
+            <SolidColorBrush x:Key="TextBoxBorder" Color="#131517" />
+            <SolidColorBrush x:Key="TextBoxBorderInner" Color="#FF232529" />
+            <SolidColorBrush x:Key="SectionBackgroundBrush" Color="#2F3136" />
+            <SolidColorBrush x:Key="ComboBoxBackground" Color="#FF303339" />
+            <SolidColorBrush x:Key="ComboBoxBorder" Color="#131517" />
+            <SolidColorBrush x:Key="ComboBoxBorderInner" Color="#FF232529" />
+            <SolidColorBrush x:Key="ComboBoxSelected" Color="#FF232529" />
+            <SolidColorBrush x:Key="ComboBoxHighlighted" Color="#FF2A2C30" />
+            <SolidColorBrush x:Key="ComboBoxArrow" Color="White" />
+            <SolidColorBrush x:Key="TextColor" Color="White" />
+            <SolidColorBrush x:Key="TextBoxForegroundThemeBrush" Color="#FFFFFFFF" />
+            <Color x:Key="ShadowColor" R="0" B="0" G="0"/>
+            <FontFamily x:Key="Nunito">/Fonts/#Nunito</FontFamily>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Controls/ComboBox.xaml" />
+                <ResourceDictionary Source="Controls/ScrollViewer.xaml" />
+                <ResourceDictionary Source="Controls/ToolTip.xaml" />
+                <ResourceDictionary Source="Controls/CustomButton.xaml" />
+                <ResourceDictionary Source="Controls/PopupImage.xaml" />
+                <ResourceDictionary Source="Controls/TitleBarButtons.xaml" />
+                <ResourceDictionary Source="Controls/Checkbox.xaml" />
+                <ResourceDictionary Source="Controls/ListViewItem.xaml" />
+                <ResourceDictionary Source="Controls/Watermark.xaml" />
+                <ResourceDictionary Source="Controls/WatermarkOld.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

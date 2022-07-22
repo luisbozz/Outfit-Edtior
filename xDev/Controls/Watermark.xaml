@@ -1,0 +1,68 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:xDev">
+
+    <Style x:Key="Watermark" TargetType="{x:Type TextBox}">
+        <Setter Property="FontFamily" Value="{DynamicResource Nunito}"/>
+        <Setter Property="FontSize" Value="14.0"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+        <Setter Property="Cursor" Value="IBeam"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource TextBoxForegroundThemeBrush}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="ScrollViewer.PanningMode" Value="None"/>
+        <Setter Property="local:CornerRadiusSetter.CornerRadius" Value="2"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}" x:Name="main">
+                    <ControlTemplate.Resources>
+                        <local:IsStringNotEmpty x:Key="isStringNotEmpty"/>
+                    </ControlTemplate.Resources>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border x:Name="Border" Grid.ColumnSpan="3" Background="{DynamicResource ComboBoxBackground}" BorderThickness="1" BorderBrush="{DynamicResource ComboBoxBorderInner}" CornerRadius="{TemplateBinding local:CornerRadiusSetter.CornerRadius}"/>
+
+                            <Grid x:Name="WaterMarkGrid" Margin="2,0,0,0" Visibility="Visible">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" MaxWidth="108"/>
+                                    <ColumnDefinition Width="3"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{TemplateBinding Tag}" ToolTip="{TemplateBinding Tag}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                           Foreground="Gray" FontFamily="{DynamicResource Nunito}" Margin="4 0" MaxWidth="100" FontSize="{TemplateBinding FontSize}" TextTrimming="CharacterEllipsis"/>
+                                
+                                <Border Grid.Column="1" CornerRadius="1" Margin="1 3" Background="{DynamicResource ComboBoxBorderInner}"/>
+
+                            </Grid>
+                            <ScrollViewer Margin="3,0,0,0" x:Name="PART_ContentHost" Grid.Column="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" PanningMode="None"/>
+
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+
+
+
+
+                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource Self}, Converter={StaticResource isStringNotEmpty}}" Value="true">
+                            <Setter TargetName="WaterMarkGrid" Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="DimGray"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ComboBoxBorder}"/>
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="true">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ComboBoxBorder}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <BorderGapMaskConverter x:Key="BorderGapMaskConverter"/>
+</ResourceDictionary>

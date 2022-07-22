@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="xDev.Controls.CustomTB"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:xDev.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="250" Foreground="{DynamicResource TextColor}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.ColumnSpan="3" Background="{DynamicResource ComboBoxBackground}" BorderThickness="1" BorderBrush="{DynamicResource ComboBoxBorder}" CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, FallbackValue=5}"/>
+
+        <Grid x:Name="WaterMarkGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" MaxWidth="75"/>
+                <ColumnDefinition Width="3"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="WaterMarkLabel" Text="{Binding Watermark, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, FallbackValue=Watermark}"
+                        VerticalAlignment="{Binding TextAlignment, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, FallbackValue=Center}"
+                        Visibility="Visible" Foreground="Gray" FontFamily="{DynamicResource Nunito}" TextWrapping="Wrap" Margin="2 0" MaxWidth="75" HorizontalAlignment="Left" FontSize="14"/>
+            <Border 
+                  Grid.Column="1"
+                  CornerRadius="1" 
+                  Margin="1 3" 
+                  Background="{DynamicResource ComboBoxBorderInner}"/>
+
+        </Grid>
+        <TextBox Grid.Column="1" Margin="2,0,0,0" x:Name="PART_ContentHost" VerticalAlignment="Stretch" BorderThickness="0" Background="Transparent" TextAlignment="Left" VerticalContentAlignment="{Binding TextAlignment, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, FallbackValue=Center}" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, FallbackValue=White}" CaretBrush="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, FallbackValue=White}" Text="{Binding Text, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, FallbackValue=''}"/>
+        
+    </Grid>
+</UserControl>

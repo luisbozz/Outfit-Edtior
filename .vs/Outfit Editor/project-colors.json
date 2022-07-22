@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "28c1f828-19b4-43b9-b726-dcaa579948d5": {
+      "ProjectGuid": "28c1f828-19b4-43b9-b726-dcaa579948d5",
+      "DisplayName": "xDev",
+      "ColorIndex": 0
+    },
+    "ae8e31b4-566b-4cb1-97cf-969c9746d71b": {
+      "ProjectGuid": "ae8e31b4-566b-4cb1-97cf-969c9746d71b",
+      "DisplayName": "Outfit Editor",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

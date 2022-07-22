@@ -1,0 +1,35 @@
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\bin\x64\Release\Outfit Editor.exe.config
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\bin\x64\Release\Outfit Editor.exe
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\bin\x64\Release\Outfit Editor.pdb
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\bin\x64\Release\Newtonsoft.Json.dll
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\bin\x64\Release\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\bin\x64\Release\Newtonsoft.Json.xml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\bin\x64\Release\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\ComboBox.g.cs
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\CustomTB.g.cs
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Outfit Editor.g.cs
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\App.g.cs
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\GeneratedInternalTypeHelper.g.cs
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Outfit Editor_MarkupCompile.cache
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Outfit Editor_MarkupCompile.lref
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\App.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\Checkbox.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\ComboBox.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\CustomButton.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\CustomTB.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\ListViewItem.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\PopupImage.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\ScrollViewer.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\TitleBarButtons.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\ToolTip.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\Watermark.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Controls\WatermarkOld.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Outfit Editor.baml
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Outfit Editor.g.resources
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\xDev.Properties.Resources.resources
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\xDev.csproj.GenerateResource.cache
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\xDev.csproj.CoreCompileInputs.cache
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\xDev.csproj.CopyComplete
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Outfit Editor.exe
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\Outfit Editor.pdb
+C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\xDev.csproj.AssemblyReference.cache
