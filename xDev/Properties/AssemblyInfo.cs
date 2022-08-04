@@ -31,11 +31,12 @@ using System.Windows;
 //[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
 [assembly: Obfuscation(Feature = "merge with System.Runtime.CompilerServices.Unsafe.dll", Exclude = false)]
 [assembly: Obfuscation(Feature = "merge with Newtonsoft.Json.dll", Exclude = false)]
+[assembly: Obfuscation(Feature = "merge with mry.dll", Exclude = false)]
 [assembly: Obfuscation(Feature = "encrypt resources [compress]", Exclude = false)]
 [assembly: Obfuscation(Feature = "sanitize resources [minify]", Exclude = false)]
 [assembly: Obfuscation(Feature = "code control flow obfuscation", Exclude = false)]
 [assembly: Obfuscation(Feature = "rename serializable symbols", Exclude = false)]
-[assembly: Obfuscation(Feature = "encrypt symbol names with password bblrg6hF5P6WijQalBjUl4TFRYZAeGv9mUcxU4aCbBSn1SG8uJ22jLul7GPE0HZX", Exclude = false)]
+[assembly: Obfuscation(Feature = "encrypt symbol names with password cclrg6hF5P6WijQalBjUl4TFRYZAeGv9mUcxU4aCbBSn1SG8uJ22jLul7GPE0HZX", Exclude = false)]
 
 
 [assembly: ThemeInfo(
@@ -58,5 +59,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.0.2")]
-[assembly: AssemblyFileVersion("2.0.0.2")]
+[assembly: AssemblyVersion("2.61")]
+[assembly: AssemblyFileVersion("2.61")]

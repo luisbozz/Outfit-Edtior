@@ -15,7 +15,7 @@
                   CornerRadius="{TemplateBinding local:CornerRadiusSetter.CornerRadius}"
                   Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}"
-                  BorderThickness="1" />
+                  BorderThickness="{TemplateBinding BorderThickness}" />
             <Border 
                   Grid.Column="0"
                   Margin="2" 
@@ -47,7 +47,7 @@
     </ControlTemplate>
 
     <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
-        <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
+        <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" Grid.Column="1" />
     </ControlTemplate>
 
     <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
@@ -57,48 +57,88 @@
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
         <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
-        <Setter Property="FontFamily" Value="{DynamicResource Nunito}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource Volte}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderInner}"/>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="local:CornerRadiusSetter.CornerRadius" Value="2"/>
         <Setter Property="FontSize" Value="20"/>
+        <Setter Property="ToolTip" Value="{Binding Path=ToolTip, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"/>
         <!--<EventSetter Event="PreviewMouseWheel" Handler="comboboxScrollWithoutFocusEvent"/>-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <ControlTemplate.Resources>
+                        <local:IsStringNotEmpty x:Key="isStringNotEmpty"/>
+                        <local:TrimmedTextBlockVisibilityConverter x:Key="trimmedVisibilityConverter" />
+                    </ControlTemplate.Resources>
+
                     <Grid>
+
                         <ToggleButton 
                             Name="ToggleButton" 
                             Background="{DynamicResource ComboBoxBackground}"
-                            BorderBrush="{DynamicResource ComboBoxBorderInner}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
                             Template="{StaticResource ComboBoxToggleButton}" 
                             Grid.Column="2" 
                             Focusable="false"
                             IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
                             ClickMode="Press" local:CornerRadiusSetter.CornerRadius="{TemplateBinding local:CornerRadiusSetter.CornerRadius}">
                         </ToggleButton>
-                        <ContentPresenter Name="ContentSite" IsHitTestVisible="False"  Content="{TemplateBinding SelectionBoxItem}"
-                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                            Margin="7,0,23,0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Left">
-                            <ContentPresenter.Resources>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="TextTrimming" Value="CharacterEllipsis"></Setter>
-                                </Style>
-                            </ContentPresenter.Resources>
-                        </ContentPresenter>
-                        <TextBox x:Name="PART_EditableTextBox"
-                            Style="{x:Null}" 
-                            Template="{StaticResource ComboBoxTextBox}" 
-                            HorizontalAlignment="Left" 
-                            VerticalAlignment="Center" 
-                            Margin="7,0,23,0"
-                            Focusable="True" 
-                            Background="{DynamicResource ComboBoxBackground}"
-                            Foreground="Green"
-                            Visibility="Hidden"
-                            IsReadOnly="{TemplateBinding IsReadOnly}" BorderBrush="{DynamicResource ComboBoxBorder}"/>
+
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.5*"/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition Width="0.5*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid x:Name="WaterMarkGrid" Visibility="Visible" Cursor="{TemplateBinding Cursor}" Grid.Column="0" IsHitTestVisible="False" HorizontalAlignment="Left">
+                                <Grid.ToolTip>
+                                    <ToolTip Visibility="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget, Converter={StaticResource trimmedVisibilityConverter}}">
+                                        <ToolTip.Content>
+                                            <TextBlock Text="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"/>
+                                        </ToolTip.Content>
+                                    </ToolTip>
+                                </Grid.ToolTip>
+
+                                <Viewbox Stretch="Uniform" StretchDirection="DownOnly">
+                                    <TextBlock  TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding Tag}" FontFamily="{DynamicResource Volte}" Cursor="{TemplateBinding Cursor}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="7,0,10,0"/>
+                                </Viewbox>
+
+
+                            </Grid>
+                            <Rectangle x:Name="WaterMarkREC" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Fill="{DynamicResource ComboBoxBorderInner}" Height="{Binding Path=Height, ElementName=WaterMarkGrid}" Margin="0 3" Width="1" Panel.ZIndex="1" />
+                            <ContentPresenter Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}"
+                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                Margin="7,0,23,0"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                Grid.Column="2">
+                                <ContentPresenter.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextTrimming" Value="CharacterEllipsis"></Setter>
+                                    </Style>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                            <TextBox x:Name="PART_EditableTextBox"
+                                Style="{x:Null}" 
+                                Template="{StaticResource ComboBoxTextBox}" 
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Center" 
+                                Margin="7,0,23,0"
+                                Focusable="True" 
+                                Background="{DynamicResource ComboBoxBackground}"
+                                Foreground="Green"
+                                Visibility="Hidden"
+                                IsReadOnly="{TemplateBinding IsReadOnly}" BorderBrush="{DynamicResource ComboBoxBorder}"
+                                Grid.Column="2"/>
+                        </Grid>
+
+
                         <Popup 
                             Name="Popup"
                             Placement="Bottom"
@@ -111,7 +151,7 @@
                                 Background="{DynamicResource ComboBoxBackground}"
                                 CornerRadius="{TemplateBinding local:CornerRadiusSetter.CornerRadius}"
                                 BorderThickness="1"
-                                BorderBrush="{DynamicResource ComboBoxBorderInner}">
+                                BorderBrush="{TemplateBinding BorderBrush}">
                                 <Grid Name="DropDown"
                                     SnapsToDevicePixels="True"                
                                     MinWidth="{TemplateBinding ActualWidth}"
@@ -127,9 +167,17 @@
                         <Trigger Property="HasItems" Value="false">
                             <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95"/>
                         </Trigger>
-                        <Trigger Property="SelectedIndex" Value="-1">
+                        <DataTrigger Binding="{Binding Path=Tag, RelativeSource={RelativeSource Self}, Converter={StaticResource isStringNotEmpty}}" Value="true">
+                            <Setter TargetName="WaterMarkGrid" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="WaterMarkREC" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="ContentSite" Property="Grid.Column" Value="0"/>
+                            <Setter TargetName="ContentSite" Property="Grid.ColumnSpan" Value="3"/>
+                            <Setter TargetName="PART_EditableTextBox" Property="Grid.Column" Value="0"/>
+                            <Setter TargetName="PART_EditableTextBox" Property="Grid.ColumnSpan" Value="3"/>
+                        </DataTrigger>
+                        <!--<Trigger Property="SelectedIndex" Value="-1">
                             <Setter TargetName="ContentSite" Property="Content" Value="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"/>
-                        </Trigger>
+                        </Trigger>-->
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}"/>
                         </Trigger>
@@ -162,18 +210,17 @@
     <Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
         <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
-        <Setter Property="FontFamily" Value="{DynamicResource Nunito}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource Volte}"/>
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="ContentStringFormat" Value=" {0}"/>
-        <Setter Property="Margin" Value="2,0,0,0"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
                     <Border Name="Border"
                               SnapsToDevicePixels="true">
-                        <ContentPresenter />
+                        <ContentPresenter Margin="2,0,0,0" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsHighlighted" Value="true">

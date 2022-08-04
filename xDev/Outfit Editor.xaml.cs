@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -59,14 +60,12 @@ namespace xDev
         string props_male_glasses     = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_glasses.json";
         string props_male_hats        = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_hats.json";
         string props_male_watches     = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_watches.json";
-        long version = 0x2476BF0;
-        long rstar = 0;
-        long steam = 0;
-        long epic = 0;
 
-        int OFFSET_name_rstar = 0x2CC846C;
-        int OFFSET_name_steam = 0x2CCD28C;
-        int OFFSET_name_epic = 0x2CCD28C;
+        long OUTFIT_version = 0x0;
+        long WORLD_version = 0x0;
+
+        string AOB_WORLD = "";
+        string AOB_OUTFIT = "";
 
         int OFFSET_imp = 0x14760;
         int OFFSET_name = 0x14C30;
@@ -89,6 +88,8 @@ namespace xDev
 
         int OFFSET_texture = 0x890;
         int OFFSET_texture_head = 0x698;
+
+        int[] OFFSET_spoof;
 
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
@@ -131,21 +132,26 @@ namespace xDev
 
             if (m.IsProcOpen)
             {
-                if (modules.Contains("EOSSDK-Win64-Shipping.dll"))
-                {
-                    version = epic;
-                    tbspoof.Text = m.memory(OFFSET_name_epic).GetString(16);
-                }
-                else if (modules.Contains("steam_api64.dll"))
-                {
-                    version = steam;
-                    tbspoof.Text = m.memory(OFFSET_name_steam).GetString(16);
-                }
-                else
-                {
-                    version = rstar;
-                    tbspoof.Text = m.memory(OFFSET_name_rstar).GetString(16);
-                }
+                //if (modules.Contains("EOSSDK-Win64-Shipping.dll"))
+                //{
+                //    version = epic;
+                //    tbspoof.Text = m.memory(OFFSET_name_epic).GetString(16);
+                //}
+                //else if (modules.Contains("steam_api64.dll"))
+                //{
+                //    version = steam;
+                //    tbspoof.Text = m.memory(OFFSET_name_steam).GetString(16);
+                //}
+                //else
+                //{
+                //    version = rstar;
+                //    tbspoof.Text = m.memory(OFFSET_name_rstar).GetString(16);
+                //}
+
+                OUTFIT_version = getOutfitPTR();
+                WORLD_version = getWorldPTR();
+
+                cbadv.IsChecked = true;
 
                 Lblattach.Foreground = new SolidColorBrush(Colors.Green);
                 Lblattach.Text = "Attached";
@@ -478,9 +484,8 @@ namespace xDev
             string filename = createOffsetsFile();
             ini_reader ini = new ini_reader(filename);
 
-            rstar = ini.ReadInteger("POINTER", "rstar");
-            steam = ini.ReadInteger("POINTER", "steam");
-            epic = ini.ReadInteger("POINTER", "epic");
+            AOB_WORLD = ini.ReadString("AOB", "WORLD");
+            AOB_OUTFIT = ini.ReadString("AOB", "OUTFIT");
 
             OFFSET_imp = ini.ReadInteger("OFFSETS", "OFFSET_imp");
             OFFSET_name = ini.ReadInteger("OFFSETS", "OFFSET_name");
@@ -490,12 +495,12 @@ namespace xDev
             OFFSET_legs = ini.ReadInteger("OFFSETS", "OFFSET_legs");
             OFFSET_para = ini.ReadInteger("OFFSETS", "OFFSET_para");
             OFFSET_feet = ini.ReadInteger("OFFSETS", "OFFSET_shoes");
-            OFFSET_misc = ini.ReadInteger("OFFSETS", "OFFSET_misc1");
+            OFFSET_misc = ini.ReadInteger("OFFSETS", "OFFSET_misc");
             OFFSET_top2 = ini.ReadInteger("OFFSETS", "OFFSET_top2");
             OFFSET_armor = ini.ReadInteger("OFFSETS", "OFFSET_armor");
-            OFFSET_decals = ini.ReadInteger("OFFSETS", "OFFSET_crew");
+            OFFSET_decals = ini.ReadInteger("OFFSETS", "OFFSET_decals");
             OFFSET_top = ini.ReadInteger("OFFSETS", "OFFSET_torso");
-            OFFSET_hat = ini.ReadInteger("OFFSETS", "OFFSET_head");
+            OFFSET_hat = ini.ReadInteger("OFFSETS", "OFFSET_hat");
             OFFSET_glasses = ini.ReadInteger("OFFSETS", "OFFSET_glasses");
             OFFSET_earrings = ini.ReadInteger("OFFSETS", "OFFSET_earrings");
             OFFSET_watches = ini.ReadInteger("OFFSETS", "OFFSET_watches");
@@ -504,9 +509,7 @@ namespace xDev
             OFFSET_texture = ini.ReadInteger("OFFSETS", "OFFSET_texture");
             OFFSET_texture_head = ini.ReadInteger("OFFSETS", "OFFSET_texture_head");
 
-            OFFSET_name_rstar = ini.ReadInteger("OFFSETS", "OFFSET_name_rstar");
-            OFFSET_name_steam = ini.ReadInteger("OFFSETS", "OFFSET_name_steam");
-            OFFSET_name_epic = ini.ReadInteger("OFFSETS", "OFFSET_name_epic");
+            OFFSET_spoof = ini.ReadString("SPOOF", "OFFSET_name").Split(',').ToList().Select(x => int.Parse(x, NumberStyles.HexNumber)).ToArray();
 
             try
             {
@@ -575,12 +578,16 @@ namespace xDev
                         Lblpid.Text = Process.GetProcessesByName("GTA5")[0].Id.ToString();
                         List<string> modules = getModules();
 
-                        if (modules.Contains("EOSSDK-Win64-Shipping.dll"))
-                            version = epic;
-                        else if (modules.Contains("steam_api64.dll"))
-                            version = steam;
-                        else
-                            version = rstar;
+                        //if (modules.Contains("EOSSDK-Win64-Shipping.dll"))
+                        //    version = epic;
+                        //else if (modules.Contains("steam_api64.dll"))
+                        //    version = steam;
+                        //else
+                        //    version = rstar;
+
+                        OUTFIT_version = getOutfitPTR();
+                        WORLD_version = getWorldPTR();
+
                         MainPages.SelectedItem = MainPage;
                     }
                 }
@@ -601,6 +608,18 @@ namespace xDev
             this.Dispatcher.BeginInvoke(DispatcherPriority.Background, workMethod, null);
         }
 
+        public long getOutfitPTR()
+        {
+            ulong addy = m.AOBScanModule2(AOB_OUTFIT, m.getMainModule());
+            return (long)(m.rip(IntPtr.Add((IntPtr)addy, 3)).ToInt64() - (long)m.getBaseAddress() + 0x48);
+        }
+
+        public long getWorldPTR()
+        {
+            ulong addy = m.AOBScanModule2(AOB_WORLD, m.getMainModule());
+            return (long)(m.rip(IntPtr.Add((IntPtr)addy, 3)).ToInt64() - (long)m.getBaseAddress());
+        }
+
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             Action<int> workMethod = delegate
@@ -615,18 +634,7 @@ namespace xDev
                     {
                         if (!tbspoof.IsFocused)
                         {
-                            if (version == epic)
-                            {
-                                m.memory(OFFSET_name_epic).GetString();
-                            }
-                            else if (version == steam)
-                            {
-                                m.memory(OFFSET_name_steam).GetString();
-                            }
-                            else
-                            {
-                                m.memory(OFFSET_name_rstar).GetString();
-                            }
+                            tbspoof.Text = m.memory(WORLD_version, OFFSET_spoof).GetString();
                         }
 
 
@@ -658,9 +666,9 @@ namespace xDev
             ObservableCollection<Outfit> outfits = new ObservableCollection<Outfit>();
             for (int i = 0; i < 20; i++)
             {
-                if (m.memory(version, (OFFSET_name + i * 0x40)).GetBytes(1)[0] != 0)
+                if (m.memory(OUTFIT_version, (OFFSET_name + i * 0x40)).GetBytes(1)[0] != 0)
                 {
-                    outfits.Add(new Outfit($"{outfits.Count + 1}. {m.memory(version, (OFFSET_name + i * 0x40)).GetString()}", i));
+                    outfits.Add(new Outfit($"{outfits.Count + 1}. {m.memory(OUTFIT_version, (OFFSET_name + i * 0x40)).GetString()}", i));
                 }
             }
 
@@ -675,48 +683,48 @@ namespace xDev
         {
             try
             {
-                if (!tbname.IsFocused) tbname.Text = m.memory(version, OFFSET_name + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x40).GetString();
-                if (!tbdecals.IsFocused) tbdecals.Text = m.memory(version, (OFFSET_decals + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                if (!tbarmor.IsFocused) tbarmor.Text = m.memory(version, (OFFSET_armor + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                if (!tbdecalstexture.IsFocused) tbdecalstexture.Text = m.memory(version, (OFFSET_decals + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                if (!tbarmortexture.IsFocused) tbarmortexture.Text = m.memory(version, (OFFSET_armor + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                if (!tbname.IsFocused) tbname.Text = m.memory(OUTFIT_version, OFFSET_name + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x40).GetString();
+                if (!tbdecals.IsFocused) tbdecals.Text = m.memory(OUTFIT_version, (OFFSET_decals + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                if (!tbarmor.IsFocused) tbarmor.Text = m.memory(OUTFIT_version, (OFFSET_armor + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                if (!tbdecalstexture.IsFocused) tbdecalstexture.Text = m.memory(OUTFIT_version, (OFFSET_decals + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                if (!tbarmortexture.IsFocused) tbarmortexture.Text = m.memory(OUTFIT_version, (OFFSET_armor + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
 
                 if (cbadv.IsChecked ?? true)
                 {
-                    if (!tbtop.IsFocused) tbtop.Text = m.memory(version, (OFFSET_top + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tbtop2.IsFocused) tbtop2.Text = m.memory(version, (OFFSET_top2 + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tblegs.IsFocused) tblegs.Text = m.memory(version, (OFFSET_legs + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tbfeet.IsFocused) tbfeet.Text = m.memory(version, (OFFSET_feet + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tbmisc.IsFocused) tbmisc.Text = m.memory(version, (OFFSET_misc + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tbpara.IsFocused) tbpara.Text = m.memory(version, (OFFSET_para + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tbgloves.IsFocused) tbgloves.Text = m.memory(version, (OFFSET_gloves + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tbmask.IsFocused) tbmask.Text = m.memory(version, (OFFSET_mask + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbtop.IsFocused) tbtop.Text = m.memory(OUTFIT_version, (OFFSET_top + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbtop2.IsFocused) tbtop2.Text = m.memory(OUTFIT_version, (OFFSET_top2 + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tblegs.IsFocused) tblegs.Text = m.memory(OUTFIT_version, (OFFSET_legs + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbfeet.IsFocused) tbfeet.Text = m.memory(OUTFIT_version, (OFFSET_feet + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbmisc.IsFocused) tbmisc.Text = m.memory(OUTFIT_version, (OFFSET_misc + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbpara.IsFocused) tbpara.Text = m.memory(OUTFIT_version, (OFFSET_para + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbgloves.IsFocused) tbgloves.Text = m.memory(OUTFIT_version, (OFFSET_gloves + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbmask.IsFocused) tbmask.Text = m.memory(OUTFIT_version, (OFFSET_mask + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
 
-                    if (!tbhat.IsFocused) tbhat.Text = m.memory(version, (OFFSET_hat + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
-                    if (!tbglasses.IsFocused) tbglasses.Text = m.memory(version, (OFFSET_glasses + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
-                    if (!tbears.IsFocused) tbears.Text = m.memory(version, (OFFSET_earrings + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
-                    if (!tbwatches.IsFocused) tbwatches.Text = m.memory(version, (OFFSET_watches + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
+                    if (!tbhat.IsFocused) tbhat.Text = m.memory(OUTFIT_version, (OFFSET_hat + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
+                    if (!tbglasses.IsFocused) tbglasses.Text = m.memory(OUTFIT_version, (OFFSET_glasses + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
+                    if (!tbears.IsFocused) tbears.Text = m.memory(OUTFIT_version, (OFFSET_earrings + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
+                    if (!tbwatches.IsFocused) tbwatches.Text = m.memory(OUTFIT_version, (OFFSET_watches + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
 
-                    if (!tbtoptexture.IsFocused) tbtoptexture.Text = m.memory(version, (OFFSET_top + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tbtop2texture.IsFocused) tbtop2texture.Text = m.memory(version, (OFFSET_top2 + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tblegstexture.IsFocused) tblegstexture.Text = m.memory(version, (OFFSET_legs + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tbfeettexture.IsFocused) tbfeettexture.Text = m.memory(version, (OFFSET_feet + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tbmisctexture.IsFocused) tbmisctexture.Text = m.memory(version, (OFFSET_misc + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tbparatexture.IsFocused) tbparatexture.Text = m.memory(version, (OFFSET_para + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tbglovestexture.IsFocused) tbglovestexture.Text = m.memory(version, (OFFSET_gloves + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
-                    if (!tbmasktexture.IsFocused) tbmasktexture.Text = m.memory(version, (OFFSET_mask + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbtoptexture.IsFocused) tbtoptexture.Text = m.memory(OUTFIT_version, (OFFSET_top + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbtop2texture.IsFocused) tbtop2texture.Text = m.memory(OUTFIT_version, (OFFSET_top2 + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tblegstexture.IsFocused) tblegstexture.Text = m.memory(OUTFIT_version, (OFFSET_legs + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbfeettexture.IsFocused) tbfeettexture.Text = m.memory(OUTFIT_version, (OFFSET_feet + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbmisctexture.IsFocused) tbmisctexture.Text = m.memory(OUTFIT_version, (OFFSET_misc + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbparatexture.IsFocused) tbparatexture.Text = m.memory(OUTFIT_version, (OFFSET_para + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbglovestexture.IsFocused) tbglovestexture.Text = m.memory(OUTFIT_version, (OFFSET_gloves + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
+                    if (!tbmasktexture.IsFocused) tbmasktexture.Text = m.memory(OUTFIT_version, (OFFSET_mask + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>().ToString();
 
-                    if (!tbhattexture.IsFocused) tbhattexture.Text = m.memory(version, (OFFSET_hat + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
-                    if (!tbglassestexture.IsFocused) tbglassestexture.Text = m.memory(version, (OFFSET_glasses + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
-                    if (!tbearstexture.IsFocused) tbearstexture.Text = m.memory(version, (OFFSET_earrings + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
-                    if (!tbwatchestexture.IsFocused) tbwatchestexture.Text = m.memory(version, (OFFSET_watches + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
+                    if (!tbhattexture.IsFocused) tbhattexture.Text = m.memory(OUTFIT_version, (OFFSET_hat + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
+                    if (!tbglassestexture.IsFocused) tbglassestexture.Text = m.memory(OUTFIT_version, (OFFSET_glasses + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
+                    if (!tbearstexture.IsFocused) tbearstexture.Text = m.memory(OUTFIT_version, (OFFSET_earrings + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
+                    if (!tbwatchestexture.IsFocused) tbwatchestexture.Text = m.memory(OUTFIT_version, (OFFSET_watches + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
                 }
                 else
                 {
                     try
                     {
-                        int topid = m.memory(version, (OFFSET_top + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
-                        int topvarinat = m.memory(version, (OFFSET_top + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int topid = m.memory(OUTFIT_version, (OFFSET_top + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int topvarinat = m.memory(OUTFIT_version, (OFFSET_top + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
 
                         var toparr = ((ObservableCollection<ClothingVariant>)ddtops.ItemsSource);
                         ddtops.SelectedItem = ddtops.Items.GetItemAt(toparr.IndexOf(toparr.Where(x => x.id == topid && x.variantid == topvarinat).First()));
@@ -728,8 +736,8 @@ namespace xDev
 
                     try
                     {
-                        int unershirtid = m.memory(version, (OFFSET_top2 + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
-                        int understhirtvarinat = m.memory(version, (OFFSET_top2 + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int unershirtid = m.memory(OUTFIT_version, (OFFSET_top2 + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int understhirtvarinat = m.memory(OUTFIT_version, (OFFSET_top2 + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
 
                         var undershirtarr = ((ObservableCollection<ClothingVariant>)ddundershirts.ItemsSource);
                         ddundershirts.SelectedItem = ddundershirts.Items.GetItemAt(undershirtarr.IndexOf(undershirtarr.Where(x => x.id == unershirtid && x.variantid == understhirtvarinat).First()));
@@ -741,8 +749,8 @@ namespace xDev
 
                     try
                     {
-                        int legsid = m.memory(version, (OFFSET_legs + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
-                        int legsvarinat = m.memory(version, (OFFSET_legs + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int legsid = m.memory(OUTFIT_version, (OFFSET_legs + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int legsvarinat = m.memory(OUTFIT_version, (OFFSET_legs + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
 
                         var legsarr = ((ObservableCollection<ClothingVariant>)ddlegs.ItemsSource);
                         ddlegs.SelectedItem = ddlegs.Items.GetItemAt(legsarr.IndexOf(legsarr.Where(x => x.id == legsid && x.variantid == legsvarinat).First()));
@@ -754,8 +762,8 @@ namespace xDev
 
                     try
                     {
-                        int shoesid = m.memory(version, (OFFSET_feet + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
-                        int shoesvarinat = m.memory(version, (OFFSET_feet + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int shoesid = m.memory(OUTFIT_version, (OFFSET_feet + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int shoesvarinat = m.memory(OUTFIT_version, (OFFSET_feet + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
 
                         var shoesarr = ((ObservableCollection<ClothingVariant>)ddshoes.ItemsSource);
                         ddshoes.SelectedItem = ddshoes.Items.GetItemAt(shoesarr.IndexOf(shoesarr.Where(x => x.id == shoesid && x.variantid == shoesvarinat).First()));
@@ -767,8 +775,8 @@ namespace xDev
 
                     try
                     {
-                        int accessoriesid = m.memory(version, (OFFSET_misc + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
-                        int accessoriesvarinat = m.memory(version, (OFFSET_misc + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int accessoriesid = m.memory(OUTFIT_version, (OFFSET_misc + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int accessoriesvarinat = m.memory(OUTFIT_version, (OFFSET_misc + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
 
                         var accessoriesarr = ((ObservableCollection<ClothingVariant>)ddaccessories.ItemsSource);
                         ddaccessories.SelectedItem = ddaccessories.Items.GetItemAt(accessoriesarr.IndexOf(accessoriesarr.Where(x => x.id == accessoriesid && x.variantid == accessoriesvarinat).First()));
@@ -780,8 +788,8 @@ namespace xDev
 
                     try
                     {
-                        int torsoid = m.memory(version, (OFFSET_gloves + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
-                        int torsovarinat = m.memory(version, (OFFSET_gloves + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int torsoid = m.memory(OUTFIT_version, (OFFSET_gloves + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int torsovarinat = m.memory(OUTFIT_version, (OFFSET_gloves + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
 
                         var torsoarr = ((ObservableCollection<ClothingVariant>)ddtorsos.ItemsSource);
                         ddtorsos.SelectedItem = ddtorsos.Items.GetItemAt(torsoarr.IndexOf(torsoarr.Where(x => x.id == torsoid && x.variantid == torsovarinat).First()));
@@ -793,8 +801,8 @@ namespace xDev
 
                     try
                     {
-                        int maskid = m.memory(version, (OFFSET_mask + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
-                        int maskvarinat = m.memory(version, (OFFSET_mask + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int maskid = m.memory(OUTFIT_version, (OFFSET_mask + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int maskvarinat = m.memory(OUTFIT_version, (OFFSET_mask + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
 
                         var maskarr = ((ObservableCollection<ClothingVariant>)ddmask.ItemsSource);
                         ddmask.SelectedItem = ddmask.Items.GetItemAt(maskarr.IndexOf(maskarr.Where(x => x.id == maskid && x.variantid == maskvarinat).First()));
@@ -806,8 +814,8 @@ namespace xDev
 
                     try
                     {
-                        int hairid = m.memory(version, (OFFSET_hair + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
-                        int hairvarinat = m.memory(version, (OFFSET_hair + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int hairid = m.memory(OUTFIT_version, (OFFSET_hair + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
+                        int hairvarinat = m.memory(OUTFIT_version, (OFFSET_hair + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).Get<int>();
 
                         var hairarr = ((ObservableCollection<ClothingVariant>)ddhair.ItemsSource);
                         ddhair.SelectedItem = ddhair.Items.GetItemAt(hairarr.IndexOf(hairarr.Where(x => x.id == hairid && x.variantid == hairvarinat).First()));
@@ -819,8 +827,8 @@ namespace xDev
 
                     try
                     {
-                        int earsid = m.memory(version, (OFFSET_earrings + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
-                        int earsvarinat = m.memory(version, (OFFSET_earrings + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
+                        int earsid = m.memory(OUTFIT_version, (OFFSET_earrings + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
+                        int earsvarinat = m.memory(OUTFIT_version, (OFFSET_earrings + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
 
                         var earsarr = ((ObservableCollection<ClothingVariant>)ddears.ItemsSource);
                         ddears.SelectedItem = ddears.Items.GetItemAt(earsarr.IndexOf(earsarr.Where(x => x.id == earsid && x.variantid == earsvarinat).First()));
@@ -832,8 +840,8 @@ namespace xDev
 
                     try
                     {
-                        int glassesid = m.memory(version, (OFFSET_glasses + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
-                        int glassesvarinat = m.memory(version, (OFFSET_glasses + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
+                        int glassesid = m.memory(OUTFIT_version, (OFFSET_glasses + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
+                        int glassesvarinat = m.memory(OUTFIT_version, (OFFSET_glasses + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
 
                         var glassesarr = ((ObservableCollection<ClothingVariant>)ddglasses.ItemsSource);
                         ddglasses.SelectedItem = ddglasses.Items.GetItemAt(glassesarr.IndexOf(glassesarr.Where(x => x.id == glassesid && x.variantid == glassesvarinat).First()));
@@ -845,8 +853,8 @@ namespace xDev
 
                     try
                     {
-                        int hatsid = m.memory(version, (OFFSET_hat + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
-                        int hatsvarinat = m.memory(version, (OFFSET_hat + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
+                        int hatsid = m.memory(OUTFIT_version, (OFFSET_hat + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
+                        int hatsvarinat = m.memory(OUTFIT_version, (OFFSET_hat + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
 
                         var hatsarr = ((ObservableCollection<ClothingVariant>)ddhats.ItemsSource);
                         ddhats.SelectedItem = ddhats.Items.GetItemAt(hatsarr.IndexOf(hatsarr.Where(x => x.id == hatsid && x.variantid == hatsvarinat).First()));
@@ -858,8 +866,8 @@ namespace xDev
 
                     try
                     {
-                        int watchesid = m.memory(version, (OFFSET_watches + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
-                        int watchesvarinat = m.memory(version, (OFFSET_watches + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
+                        int watchesid = m.memory(OUTFIT_version, (OFFSET_watches + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
+                        int watchesvarinat = m.memory(OUTFIT_version, (OFFSET_watches + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
 
                         var watchesarr = ((ObservableCollection<ClothingVariant>)ddwatches.ItemsSource);
                         ddwatches.SelectedItem = ddwatches.Items.GetItemAt(watchesarr.IndexOf(watchesarr.Where(x => x.id == watchesid && x.variantid == watchesvarinat).First()));
@@ -871,8 +879,8 @@ namespace xDev
 
                     try
                     {
-                        int braceletsid = m.memory(version, (OFFSET_bracelets + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
-                        int braceletsvarinat = m.memory(version, (OFFSET_bracelets + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
+                        int braceletsid = m.memory(OUTFIT_version, (OFFSET_bracelets + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
+                        int braceletsvarinat = m.memory(OUTFIT_version, (OFFSET_bracelets + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>();
 
                         var braceletsarr = ((ObservableCollection<ClothingVariant>)ddbracelets.ItemsSource);
                         ddbracelets.SelectedItem = ddbracelets.Items.GetItemAt(braceletsarr.IndexOf(braceletsarr.Where(x => x.id == braceletsid && x.variantid == braceletsvarinat).First()));
@@ -893,18 +901,7 @@ namespace xDev
         {
             if (m.IsProcOpen)
             {
-                if (version == epic)
-                {
-                    m.memory(OFFSET_name_epic).SetString(tbspoof.Text);
-                }
-                else if (version == steam)
-                {
-                    m.memory(OFFSET_name_steam).SetString(tbspoof.Text);
-                }
-                else
-                {
-                    m.memory(OFFSET_name_rstar).SetString(tbspoof.Text);
-                }
+                m.memory(WORLD_version, OFFSET_spoof).SetString(tbspoof.Text);
             }
         }
 
@@ -917,7 +914,7 @@ namespace xDev
         {
             if (m.IsProcOpen)
             {
-                m.memory(version, OFFSET_name + ddoutfitnumber.SelectedIndex * 0x40).SetString(tbname.Text);
+                m.memory(OUTFIT_version, OFFSET_name + ddoutfitnumber.SelectedIndex * 0x40).SetString(tbname.Text);
             }
         }
 
@@ -947,7 +944,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_top + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_top + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -958,7 +955,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_top + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_top + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -969,7 +966,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_top2 + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_top2 + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -980,7 +977,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_top2 + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_top2 + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -991,7 +988,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_legs + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_legs + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1002,7 +999,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_legs + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_legs + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1013,7 +1010,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_feet + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_feet + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1024,7 +1021,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_feet + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_feet + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1035,7 +1032,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_misc + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_misc + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1046,7 +1043,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_misc + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_misc + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1057,7 +1054,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_para + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_para + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1068,7 +1065,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_para + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_para + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1079,7 +1076,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_gloves + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_gloves + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1090,7 +1087,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_gloves + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_gloves + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1101,7 +1098,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_decals + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_decals + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1112,7 +1109,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_decals + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_decals + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1123,7 +1120,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_mask + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_mask + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1134,7 +1131,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_mask + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_mask + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1145,7 +1142,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_armor + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_armor + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1156,7 +1153,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_armor + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_armor + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1167,7 +1164,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_hat + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_hat + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1178,7 +1175,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_hat + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_hat + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1189,7 +1186,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_glasses + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_glasses + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1200,7 +1197,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_glasses + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_glasses + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1211,7 +1208,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_earrings + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_earrings + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1222,7 +1219,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_earrings + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_earrings + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1233,7 +1230,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_watches + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_watches + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1244,7 +1241,7 @@ namespace xDev
             try
             {
                 if (m.IsProcOpen)
-                    m.memory(version, (OFFSET_watches + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
+                    m.memory(OUTFIT_version, (OFFSET_watches + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
 
             }
             catch (Exception) { }
@@ -1264,7 +1261,7 @@ namespace xDev
 
         private void cbadv_Checked(object sender, RoutedEventArgs e)
         {
-            if (cbadv.IsChecked ?? true)
+            if (cbadv.IsChecked ?? false)
             {
                 tbmisc.Visibility = Visibility.Visible;
                 tbtop.Visibility = Visibility.Visible;
@@ -1329,8 +1326,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddtops.SelectedItem);
-                m.memory(version, (OFFSET_top + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
-                m.memory(version, (OFFSET_top + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_top + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_top + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
             }
         }
 
@@ -1339,8 +1336,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddundershirts.SelectedItem);
-                m.memory(version, (OFFSET_top2 + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
-                m.memory(version, (OFFSET_top2 + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_top2 + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_top2 + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
             }
         }
 
@@ -1349,8 +1346,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddlegs.SelectedItem);
-                m.memory(version, (OFFSET_legs + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
-                m.memory(version, (OFFSET_legs + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_legs + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_legs + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
             }
         }
 
@@ -1359,8 +1356,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddshoes.SelectedItem);
-                m.memory(version, (OFFSET_feet + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
-                m.memory(version, (OFFSET_feet + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_feet + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_feet + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
             }
         }
 
@@ -1369,8 +1366,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddaccessories.SelectedItem);
-                m.memory(version, (OFFSET_misc + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
-                m.memory(version, (OFFSET_misc + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_misc + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_misc + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
             }
         }
 
@@ -1379,8 +1376,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddtorsos.SelectedItem);
-                m.memory(version, (OFFSET_gloves + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
-                m.memory(version, (OFFSET_gloves + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_gloves + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_gloves + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
             }
         }
 
@@ -1389,8 +1386,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddmask.SelectedItem);
-                m.memory(version, (OFFSET_mask + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
-                m.memory(version, (OFFSET_mask + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_mask + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_mask + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
             }
         }
 
@@ -1399,8 +1396,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddhair.SelectedItem);
-                m.memory(version, (OFFSET_hair + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
-                m.memory(version, (OFFSET_hair + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_hair + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_hair + OFFSET_texture + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x68)).SetInt(ci.variantid);
             }
         }
 
@@ -1409,8 +1406,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddbracelets.SelectedItem);
-                m.memory(version, (OFFSET_bracelets + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.id);
-                m.memory(version, (OFFSET_bracelets + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_bracelets + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_bracelets + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.variantid);
             }
         }
 
@@ -1419,8 +1416,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddears.SelectedItem);
-                m.memory(version, (OFFSET_earrings + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.id);
-                m.memory(version, (OFFSET_earrings + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_earrings + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_earrings + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.variantid);
             }
         }
 
@@ -1429,8 +1426,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddglasses.SelectedItem);
-                m.memory(version, (OFFSET_glasses + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.id);
-                m.memory(version, (OFFSET_glasses + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_glasses + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_glasses + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.variantid);
             }
         }
 
@@ -1439,8 +1436,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddhats.SelectedItem);
-                m.memory(version, (OFFSET_hat + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.id);
-                m.memory(version, (OFFSET_hat + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_hat + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_hat + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.variantid);
             }
         }
 
@@ -1449,8 +1446,8 @@ namespace xDev
             if (m.IsProcOpen)
             {
                 var ci = ((ClothingVariant)ddwatches.SelectedItem);
-                m.memory(version, (OFFSET_watches + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.id);
-                m.memory(version, (OFFSET_watches + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.variantid);
+                m.memory(OUTFIT_version, (OFFSET_watches + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.id);
+                m.memory(OUTFIT_version, (OFFSET_watches + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt(ci.variantid);
             }
         }
     }
