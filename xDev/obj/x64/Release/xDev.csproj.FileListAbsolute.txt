@@ -36,10 +36,14 @@ C:\Users\luisg\OneDrive\Dokumente\Outfit shit\xDev\obj\x64\Release\xDev.csproj.A
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\bin\x64\Release\Outfit Editor.exe.config
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\bin\x64\Release\Outfit Editor.exe
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\bin\x64\Release\Outfit Editor.pdb
+C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\bin\x64\Release\mry.dll
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\bin\x64\Release\Newtonsoft.Json.dll
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\bin\x64\Release\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\bin\x64\Release\mry.pdb
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\bin\x64\Release\Newtonsoft.Json.xml
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\bin\x64\Release\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\obj\x64\Release\xDev.csproj.AssemblyReference.cache
+C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\obj\x64\Release\xDev.csproj.SuggestedBindingRedirects.cache
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\obj\x64\Release\Controls\ComboBox.g.cs
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\obj\x64\Release\Controls\CustomTB.g.cs
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\obj\x64\Release\Outfit Editor.g.cs
@@ -67,5 +71,3 @@ C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\obj\x64\Release\xDev
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\obj\x64\Release\xDev.csproj.CopyComplete
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\obj\x64\Release\Outfit Editor.exe
 C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\obj\x64\Release\Outfit Editor.pdb
-C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\bin\x64\Release\mry.dll
-C:\Users\luisg\OneDrive\Dokumente\GitHub\Outfit-Edtior\xDev\bin\x64\Release\mry.pdb
