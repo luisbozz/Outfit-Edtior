@@ -36,7 +36,7 @@ using System.Windows;
 [assembly: Obfuscation(Feature = "sanitize resources [minify]", Exclude = false)]
 [assembly: Obfuscation(Feature = "code control flow obfuscation", Exclude = false)]
 [assembly: Obfuscation(Feature = "rename serializable symbols", Exclude = false)]
-[assembly: Obfuscation(Feature = "encrypt symbol names with password cclrg6hF5P6WijQalBjUl4TFRYZAeGv9mUcxU4aCbBSn1SG8uJ22jLul7GPE0HZX", Exclude = false)]
+[assembly: Obfuscation(Feature = "encrypt symbol names with password zzlrg6hF5P6WijQalBjUl4TFRYZAeGv9mUcxU4aCbBSn1SG8uJ22jLul7GPE0HZX", Exclude = false)]
 
 
 [assembly: ThemeInfo(
@@ -59,5 +59,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.61")]
-[assembly: AssemblyFileVersion("2.61")]
+[assembly: AssemblyVersion("2.71")]
+[assembly: AssemblyFileVersion("2.71")]
