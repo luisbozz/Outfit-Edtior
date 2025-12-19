@@ -69,11 +69,22 @@
             </Grid.ColumnDefinitions>
 
 
-            <TextBlock Text="xDev | lUiSBOzZ_RSG" Foreground="White" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                xDev | <Hyperlink NavigateUri="https://discord.com/invite/f2Uwzwr/" Click="Hyperlink_Click">lUiSBOzZ_RSG</Hyperlink> |  <Hyperlink NavigateUri="https://twitter.com/yAmethxst" Click="Hyperlink_Click">yAmethxst</Hyperlink>
+            </TextBlock>
+
+
 
             <Button x:Name="BtnMinimize" Grid.Column="2" Style="{DynamicResource TitleBarButton}" WindowChrome.IsHitTestVisibleInChrome="True" Click="BtnMinimize_Click">
                 <Path x:Name="minimizepath"  Data="M 0 0 L 6 6 L 12 0 Z" Stretch="Uniform" Stroke="White" Margin="3"/>
             </Button>
+
+            <Button x:Name="BtnDiscord" Style="{DynamicResource TitleBarButton}" Click="BtnDiscord_Click" Width="32">
+                <Button.Background>
+                    <ImageBrush ImageSource="/discord_icon.png"/>
+                </Button.Background>
+            </Button>
+
 
             <Button x:Name="BtnClose" Grid.Column="3" Style="{DynamicResource TitleBarButton}" WindowChrome.IsHitTestVisibleInChrome="True" Click="BtnClose_Click" >
                 <Path x:Name="closepath" Data="M0,0 L1,1 M0,1 L1,0" Stretch="Uniform" Stroke="White" Margin="3"/>
@@ -153,11 +164,25 @@
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="tbname" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Outfit Name" Height="30" Width="300" Margin="0 5" TextChanged="tbname_TextChanged" PreviewMouseDown="tbtripleclick_PreviewMouseDown"/>
+                                    <TextBox x:Name="tbname" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Outfit Name" Height="30" Width="310" Margin="0 5" TextChanged="tbname_TextChanged" PreviewMouseDown="tbtripleclick_PreviewMouseDown"/>
+
+                                    <Button Content="Export v1" Click="ExportButton_Click1" Grid.Column="0" Height="30" Width="70" Margin="-200 5" HorizontalAlignment="Left" FontFamily="{DynamicResource Nunito}" Background="{StaticResource SectionBackgroundBrush}"/>
+                                    <Button Content="Export v2" Click="ExportButton_Click2" Grid.Column="0" Height="30" Width="70" Margin="-120 5" HorizontalAlignment="Left" FontFamily="{DynamicResource Nunito}" Background="{StaticResource SectionBackgroundBrush}"/>
+                                    <Button Content="Import" Click="ImportButton_Click" Grid.Column="0" Height="30" Width="70" Margin="-120 5" HorizontalAlignment="Right" FontFamily="{DynamicResource Nunito}" Background="{StaticResource SectionBackgroundBrush}"/>
+
+                                    <TextBlock x:Name="NameSizeTextBlock" Grid.Column="0" Height="20" Width="200" Margin="-105,5,0,-45">
+                                        <Run Text="Name size: " Foreground="#787979"/>
+                                        <Run x:Name="ByteCountRun" Text="0/31 bytes" Foreground="White"/>
+                                    </TextBlock>
+
+
+
                                     <Image x:Name="ImageNameHelp" Grid.Column="1" Source="{DynamicResource help32}" Height="30" Margin="5,5,0,5" MouseUp="ImageNameHelp_MouseUp"/>
                                 </Grid>
 
-                                <TextBlock Text="Advanced Mode" VerticalAlignment="Center" Margin="0,0,40,0" HorizontalAlignment="Right" />
+
+
+                                <TextBlock Text="Easy Mode" VerticalAlignment="Center" Margin="0,0,40,0" HorizontalAlignment="Right" />
                                 <CheckBox x:Name="cbadv" Height="27" Width="27" Margin="0,0,5,0" HorizontalAlignment="Right" Checked="cbadv_Checked" Unchecked="cbadv_Checked"/>
 
                                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" Margin="5 0">
@@ -177,6 +202,7 @@
                                             </Grid.RowDefinitions>
 
                                             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Foreground="{DynamicResource TextColor}" FontSize="28" Text="Components" FontWeight="Bold"/>
+
 
                                             <WrapPanel Orientation="Vertical" Grid.Row="1">
 
@@ -243,8 +269,8 @@
                                                     <TextBox x:Name="tbmasktexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbmasktexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
                                                 </Grid>
 
-                                                
-                                                
+
+
                                                 <ComboBox Visibility="Collapsed" Margin="2" Height="30" x:Name="ddtops" Width="250" Tag="Tops" ToolTip="Tops" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddtops_SelectionChanged" />
                                                 <ComboBox Visibility="Collapsed" Margin="2" Height="30" x:Name="ddundershirts" Width="250" Tag="Untershirts" ToolTip="Untershirts" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddundershirts_SelectionChanged"/>
                                                 <ComboBox Visibility="Collapsed" Margin="2" Height="30" x:Name="ddlegs" Width="250" Tag="Legs" ToolTip="Legs" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddlegs_SelectionChanged"/>
@@ -271,7 +297,7 @@
                                                     <TextBox x:Name="tbdecals" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Decals" Width="210" Height="30" Margin="5 0" TextChanged="tbdecals_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
                                                     <TextBox x:Name="tbdecalstexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbdecalstexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
                                                 </Grid>
-                                                
+
                                                 <Grid Margin="2" Visibility="{Binding ElementName=tbarmor, Path=Visibility}">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="auto"/>
@@ -331,6 +357,15 @@
                                                     </Grid.ColumnDefinitions>
                                                     <TextBox x:Name="tbwatches" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Watches" Width="210" Height="30" Margin="5 0" TextChanged="tbwatches_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" />
                                                     <TextBox x:Name="tbwatchestexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbwatchestexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" Visibility="{Binding ElementName=tbwatches, Path=Visibility}"/>
+                                                </Grid>
+
+                                                <Grid Margin="2" Visibility="{Binding ElementName=tbbracelets, Path=Visibility}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox x:Name="tbbracelets" Grid.Column="0" Style="{StaticResource Watermark}" Tag="Bracelets" Width="210" Height="30" Margin="5 0" TextChanged="tbbracelets_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus" />
+                                                    <TextBox x:Name="tbbraceletstexture" Grid.Column="1" Style="{StaticResource Watermark}" Width="30" Height="30" TextChanged="tbbraceletstexture_TextChanged" GotKeyboardFocus="tb_GotKeyboardFocus"/>
                                                 </Grid>
 
                                                 <ComboBox Visibility="Collapsed" Margin="2" Height="30" x:Name="ddbracelets" Width="250" Tag="Bracelets" ToolTip="Bracelets" ItemTemplate="{StaticResource clothing}" SelectionChanged="ddbracelets_SelectionChanged"/>

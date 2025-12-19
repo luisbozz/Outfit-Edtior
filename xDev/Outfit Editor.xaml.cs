@@ -1,4 +1,5 @@
-﻿using mry;
+﻿using Microsoft.Win32;
+using mry;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -10,13 +11,16 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+
 
 
 namespace xDev
@@ -34,32 +38,32 @@ namespace xDev
             InitializeComponent();
         }
 
-        string offset_url             = "https://pastebin.com/raw/ww39b45T";
-        string masks                  = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/masks.json";
-        string female_accessories     = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_accessories.json";
-        string female_hair            = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_hair.json";
-        string female_legs            = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_legs.json";
-        string female_shoes           = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_shoes.json";
-        string female_tops            = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_tops.json";
-        string female_torsos          = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_torsos.json";
-        string female_undershirts     = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_undershirts.json";
-        string male_accessories       = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_accessories.json";
-        string male_hair              = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_hair.json";
-        string male_legs              = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_legs.json";
-        string male_shoes             = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_shoes.json";
-        string male_tops              = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_tops.json";
-        string male_torsos            = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_torsos.json";
-        string male_undershirts       = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_undershirts.json";
+        string offset_url = "https://amethxst.dev/offset_xdev_1.71.txt";
+        string masks = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/masks.json";
+        string female_accessories = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_accessories.json";
+        string female_hair = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_hair.json";
+        string female_legs = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_legs.json";
+        string female_shoes = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_shoes.json";
+        string female_tops = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_tops.json";
+        string female_torsos = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_torsos.json";
+        string female_undershirts = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/female_undershirts.json";
+        string male_accessories = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_accessories.json";
+        string male_hair = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_hair.json";
+        string male_legs = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_legs.json";
+        string male_shoes = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_shoes.json";
+        string male_tops = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_tops.json";
+        string male_torsos = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_torsos.json";
+        string male_undershirts = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/male_undershirts.json";
         string props_female_bracelets = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_female_bracelets.json";
-        string props_female_ears      = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_female_ears.json";
-        string props_female_glasses   = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_female_glasses.json";
-        string props_female_hats      = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_female_hats.json";
-        string props_female_watches   = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_female_watches.json";
-        string props_male_bracelets   = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_bracelets.json";
-        string props_male_ears        = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_ears.json";
-        string props_male_glasses     = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_glasses.json";
-        string props_male_hats        = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_hats.json";
-        string props_male_watches     = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_watches.json";
+        string props_female_ears = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_female_ears.json";
+        string props_female_glasses = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_female_glasses.json";
+        string props_female_hats = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_female_hats.json";
+        string props_female_watches = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_female_watches.json";
+        string props_male_bracelets = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_bracelets.json";
+        string props_male_ears = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_ears.json";
+        string props_male_glasses = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_glasses.json";
+        string props_male_hats = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_hats.json";
+        string props_male_watches = "https://raw.githubusercontent.com/root-cause/v-clothingnames/master/props_male_watches.json";
 
         long OUTFIT_version = 0x0;
         long WORLD_version = 0x0;
@@ -90,6 +94,395 @@ namespace xDev
         int OFFSET_texture_head = 0x698;
 
         int[] OFFSET_spoof;
+
+        private bool _suspendOutfitUi = false;
+
+        //LINK Xenvious & yAmethxst
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            Hyperlink hyperlink = (Hyperlink)sender;
+            try
+            {
+                System.Diagnostics.Process.Start(hyperlink.NavigateUri.AbsoluteUri);
+            }
+            catch (Exception)
+            {
+                //
+            }
+        }
+
+        //DISCORD
+        private void BtnDiscord_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://discord.com/invite/UwAsC6GSJk/");
+        }
+
+
+        //EXPORT V1
+        private void ExportButton_Click1(object sender, RoutedEventArgs e)
+        {
+            string outfitName = tbname.Text;
+
+            StringBuilder fileContent = new StringBuilder($"name = {outfitName}\n");
+
+            Dictionary<string, string> categoryMap = new Dictionary<string, string>
+    {
+        { "top", "Top" },
+        { "top2", "Undershirt" },
+        { "legs", "Legs" },
+        { "feet", "Feet" },
+        { "misc", "Accessories" },
+        { "para", "Bags" },
+        { "mask", "Mask" },
+        { "gloves", "Gloves" },
+        { "decals", "Decals" },
+        { "armor", "Armor" },
+        { "hat", "Hats" },
+        { "glasses", "Glasses" },
+        { "ears", "Ears" },
+        { "watches", "Watches" },
+        { "bracelets", "Bracelets" }
+
+    };
+
+            foreach (string internalName in categoryMap.Keys)
+            {
+                TextBox idTextBox = this.FindName($"tb{internalName}") as TextBox;
+                TextBox textureTextBox = this.FindName($"tb{internalName}texture") as TextBox;
+                string id = idTextBox?.Text;
+                string texture = textureTextBox?.Text;
+
+                if (id != null && texture != null)
+                {
+                    string displayName = categoryMap[internalName];
+                    fileContent.AppendLine($"{displayName} = {id}/{texture}");
+                }
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text File (*.txt)|*.txt";
+            saveFileDialog.FileName = outfitName;
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string filePath = saveFileDialog.FileName;
+
+                File.WriteAllText(filePath, fileContent.ToString());
+            }
+        }
+
+        //EXPORT V2
+        private void ExportButton_Click2(object sender, RoutedEventArgs e)
+        {
+            string outfitName = tbname.Text;
+
+            StringBuilder fileContent = new StringBuilder($"name = {outfitName}\n");
+
+            Dictionary<string, string> categoryMap = new Dictionary<string, string>
+    {
+        { "top", "Top" },
+        { "top2", "Undershirt" },
+        { "legs", "Legs" },
+        { "feet", "Feet" },
+        { "misc", "Accessories" },
+        { "para", "Bags" },
+        { "mask", "Mask" },
+        { "gloves", "Gloves" },
+        { "decals", "Decals" },
+        { "armor", "Armor" },
+        { "hat", "Hats" },
+        { "glasses", "Glasses" },
+        { "ears", "Ears" },
+        { "watches", "Watches" },
+        { "bracelets", "Bracelets" }
+
+
+    };
+
+            foreach (string internalName in categoryMap.Keys)
+            {
+                TextBox idTextBox = this.FindName($"tb{internalName}") as TextBox;
+                TextBox textureTextBox = this.FindName($"tb{internalName}texture") as TextBox;
+                string id = idTextBox?.Text;
+                string texture = textureTextBox?.Text;
+
+                if (id != null && texture != null)
+                {
+                    string displayName = categoryMap[internalName];
+                    fileContent.AppendLine($"{displayName} = {id}");
+                    fileContent.AppendLine($"{displayName} variation = {texture}");
+                }
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text File (*.txt)|*.txt";
+            saveFileDialog.FileName = outfitName;
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string filePath = saveFileDialog.FileName;
+
+                File.WriteAllText(filePath, fileContent.ToString());
+            }
+        }
+
+
+        //IMPORT
+        private void ImportButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text File (*.txt)|*.txt";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string[] fileLines = File.ReadAllLines(openFileDialog.FileName);
+                List<string> errorMessages = new List<string>();
+
+                tbname.Text = "yAmethxs on X";
+                ResetTextBoxes();
+
+                HashSet<string> processedCategories = new HashSet<string>();
+
+                foreach (string line in fileLines)
+                {
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    if (line.ToLower().StartsWith("name"))
+                    {
+                        string[] nameParts = line.Split('=',':');
+                        tbname.Text = nameParts.Length > 1 && !string.IsNullOrWhiteSpace(nameParts[1]) ? nameParts[1].Trim() : "yAmethxs on X";
+                        continue;
+                    }
+
+                    string[] parts = line.Split(new char[] { '=', '/', ':'}, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (line.Contains("/"))
+                    {
+                        if (parts.Length != 3 || !int.TryParse(parts[1].Trim(), out _) || !int.TryParse(parts[2].Trim(), out _))
+                        {
+                            errorMessages.Add($"Format error in line: {line}");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (parts.Length != 2 || !int.TryParse(parts[1].Trim(), out _))
+                        {
+                            errorMessages.Add($"Value missing or format error in line: {line}");
+                            continue;
+                        }
+                    }
+
+                    string categoryLower = parts[0].Trim().ToLower();
+                    processedCategories.Add(categoryLower);
+                    ApplyValue(categoryLower, parts[1].Trim(), true, errorMessages);
+
+                    if (parts.Length == 3)
+                    {
+                        ApplyValue(categoryLower + " variation", parts[2].Trim(), true, errorMessages);
+                    }
+                }
+
+                List<string> missingCategories = CheckForMissingCategories(processedCategories);
+
+                string message = "File imported successfully.";
+
+                if (missingCategories.Count > 0 || errorMessages.Count > 0)
+                {
+                    var missingCategoriesMsg = missingCategories.Count > 0 ? "Missing categories: " + string.Join(", ", missingCategories) : "";
+                    var errorMessagesMsg = errorMessages.Count > 0 ? "Errors found:" : "";
+
+                    message += "\nAttention: " + missingCategoriesMsg;
+
+                    if (errorMessages.Count > 0)
+                    {
+                        message += "\n" + errorMessagesMsg;
+                        foreach (var errorMessage in errorMessages)
+                        {
+                            message += "\n" + errorMessage;
+                        }
+                    }
+                }
+
+                MessageBox.Show(message);
+                ;
+            }
+        }
+
+
+
+        private List<string> CheckForMissingCategories(HashSet<string> processedCategories)
+        {
+            List<string> missingCategories = new List<string>();
+            List<string> allCategories = new List<string>
+    {
+        "top", "undershirt", "legs", "feet", "accessories", "bags", "mask", "gloves", "decals", "armor", "hats", "glasses", "ears", "watches", "bracelets"
+    };
+            foreach (string category in allCategories)
+            {
+                string categoryCheck = category;
+                if (category == "bracelets" && processedCategories.Contains("bracelet"))
+                {
+                    continue;
+                }
+
+                if (!processedCategories.Contains(categoryCheck))
+                {
+                    missingCategories.Add(category);
+                }
+            }
+            return missingCategories;
+        }
+
+
+
+        private void ResetTextBoxes()
+        {
+            tbtop.Text = "X";
+            tbtoptexture.Text = "X";
+            tbtop2.Text = "X";
+            tbtop2texture.Text = "X";
+            tblegs.Text = "X";
+            tblegstexture.Text = "X";
+            tbfeet.Text = "X";
+            tbfeettexture.Text = "X";
+            tbmisc.Text = "X";
+            tbmisctexture.Text = "X";
+            tbpara.Text = "X";
+            tbparatexture.Text = "X";
+            tbmask.Text = "X";
+            tbmasktexture.Text = "X";
+            tbgloves.Text = "X";
+            tbglovestexture.Text = "X";
+            tbdecals.Text = "X";
+            tbdecalstexture.Text = "X";
+            tbarmor.Text = "X";
+            tbarmortexture.Text = "X";
+            tbhat.Text = "X";
+            tbhattexture.Text = "X";
+            tbglasses.Text = "X";
+            tbglassestexture.Text = "X";
+            tbears.Text = "X";
+            tbearstexture.Text = "X";
+            tbwatches.Text = "X";
+            tbwatchestexture.Text = "X";
+            tbbracelets.Text = "X";
+            tbbraceletstexture.Text = "X";
+        }
+
+
+        private void ApplyValue(string category, string value, bool isFormat1, List<string> errorMessages)
+        {
+            // Gestione del singolare e plurale per "bracelets"
+            if (category.Equals("bracelet", StringComparison.OrdinalIgnoreCase))
+            {
+                category = "bracelets";
+            }
+            else if (category.Equals("bracelet variation", StringComparison.OrdinalIgnoreCase))
+            {
+                category = "bracelets variation";
+            }
+
+            if (category.Equals("name", StringComparison.OrdinalIgnoreCase))
+            {
+                tbname.Text = string.IsNullOrWhiteSpace(value) ? "yAmethxs on X" : value;
+                return;
+            }
+
+            TextBox idTextBox = FindTextBoxForCategory(category);
+            if (idTextBox != null)
+            {
+                // Se il valore è vuoto, assegna "X" alla TextBox
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    idTextBox.Text = "X";
+                }
+                else // Altrimenti, assegna il valore alla TextBox
+                {
+                    idTextBox.Text = value;
+                }
+            }
+        }
+
+
+
+
+        private TextBox FindTextBoxForCategory(string category)
+        {
+            switch (category.ToLower())
+            {
+                case "top":
+                    return tbtop;
+                case "top variation":
+                    return tbtoptexture;
+                case "undershirt":
+                    return tbtop2;
+                case "undershirt variation":
+                    return tbtop2texture;
+                case "legs":
+                    return tblegs;
+                case "legs variation":
+                    return tblegstexture;
+                case "feet":
+                    return tbfeet;
+                case "feet variation":
+                    return tbfeettexture;
+                case "accessories":
+                    return tbmisc;
+                case "accessories variation":
+                    return tbmisctexture;
+                case "bags":
+                    return tbpara;
+                case "bags variation":
+                    return tbparatexture;
+                case "mask":
+                    return tbmask;
+                case "mask variation":
+                    return tbmasktexture;
+                case "gloves":
+                    return tbgloves;
+                case "gloves variation":
+                    return tbglovestexture;
+                case "decals":
+                    return tbdecals;
+                case "decals variation":
+                    return tbdecalstexture;
+                case "armor":
+                    return tbarmor;
+                case "armor variation":
+                    return tbarmortexture;
+                case "hats":
+                    return tbhat;
+                case "hats variation":
+                    return tbhattexture;
+                case "glasses":
+                    return tbglasses;
+                case "glasses variation":
+                    return tbglassestexture;
+                case "ears":
+                    return tbears;
+                case "ears variation":
+                    return tbearstexture;
+                case "watches":
+                    return tbwatches;
+                case "watches variation":
+                    return tbwatchestexture;
+                case "bracelets":
+                    return tbbracelets;
+                case "bracelets variation":
+                    return tbbraceletstexture;
+                default:
+                    return null;
+            }
+        }
+
+
+
+
+
+
+
+
 
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
@@ -657,27 +1050,31 @@ namespace xDev
 
         public void RefreshOutfitSelector()
         {
-            Outfit previouslySelectedItem = null;
-            if ((Outfit)ddoutfitnumber.SelectedItem != null)
+            _suspendOutfitUi = true;
+            try
             {
-                previouslySelectedItem = (Outfit)ddoutfitnumber.SelectedItem;
-            }
+                Outfit previouslySelectedItem = null;
+                if ((Outfit)ddoutfitnumber.SelectedItem != null)
+                    previouslySelectedItem = (Outfit)ddoutfitnumber.SelectedItem;
 
-            ObservableCollection<Outfit> outfits = new ObservableCollection<Outfit>();
-            for (int i = 0; i < 20; i++)
-            {
-                if (m.memory(OUTFIT_version, (OFFSET_name + i * 0x40)).GetBytes(1)[0] != 0)
+                var outfits = new ObservableCollection<Outfit>();
+                for (int i = 0; i < 20; i++)
                 {
-                    outfits.Add(new Outfit($"{outfits.Count + 1}. {m.memory(OUTFIT_version, (OFFSET_name + i * 0x40)).GetString()}", i));
+                    if (m.memory(OUTFIT_version, (OFFSET_name + i * 0x40)).GetBytes(1)[0] != 0)
+                        outfits.Add(new Outfit($"{outfits.Count + 1}. {m.memory(OUTFIT_version, (OFFSET_name + i * 0x40)).GetString()}", i));
                 }
+
+                ddoutfitnumber.ItemsSource = outfits;
+
+                if (previouslySelectedItem != null)
+                    ddoutfitnumber.SelectedItem = outfits.SingleOrDefault(x => x.Id == previouslySelectedItem.Id);
             }
-
-            ddoutfitnumber.ItemsSource = outfits;
-
-            if (previouslySelectedItem != null)
-                ddoutfitnumber.SelectedItem = outfits.SingleOrDefault(x => x.Id == previouslySelectedItem.Id);
-
+            finally
+            {
+                _suspendOutfitUi = false;
+            }
         }
+
 
         public void RefreshOutfitValues()
         {
@@ -718,6 +1115,10 @@ namespace xDev
                     if (!tbglassestexture.IsFocused) tbglassestexture.Text = m.memory(OUTFIT_version, (OFFSET_glasses + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
                     if (!tbearstexture.IsFocused) tbearstexture.Text = m.memory(OUTFIT_version, (OFFSET_earrings + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
                     if (!tbwatchestexture.IsFocused) tbwatchestexture.Text = m.memory(OUTFIT_version, (OFFSET_watches + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
+
+                    if (!tbbracelets.IsFocused) tbbracelets.Text = m.memory(OUTFIT_version, (OFFSET_bracelets + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
+                    if (!tbbraceletstexture.IsFocused) tbbraceletstexture.Text = m.memory(OUTFIT_version, (OFFSET_bracelets + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).Get<int>().ToString();
+
                 }
                 else
                 {
@@ -912,11 +1313,17 @@ namespace xDev
 
         private void tbname_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (m.IsProcOpen)
+            if (m.IsProcOpen && ddoutfitnumber.SelectedIndex >= 0)
             {
                 m.memory(OUTFIT_version, OFFSET_name + ddoutfitnumber.SelectedIndex * 0x40).SetString(tbname.Text);
             }
+
+            int byteCount = Encoding.UTF8.GetByteCount(tbname.Text);
+            ByteCountRun.Text = $"{byteCount}/31 bytes";
         }
+
+
+
 
         private void ImageNameHelp_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -925,19 +1332,17 @@ namespace xDev
 
         private void ddoutfitnumber_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ddoutfitnumber.SelectedIndex > -1)
-            {
-                ScreenMessage.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                ScreenMessage.Visibility = Visibility.Visible;
-            }
-            if (m.IsProcOpen)
-            {
-                RefreshOutfitValues();
-            }
+            ScreenMessage.Visibility = ddoutfitnumber.SelectedIndex > -1 ? Visibility.Collapsed : Visibility.Visible;
+
+            if (_suspendOutfitUi) return;
+            if (!m.IsProcOpen) return;
+
+            var selected = ddoutfitnumber.SelectedItem as Outfit;
+            if (selected == null) return;
+
+            RefreshOutfitValues();
         }
+
 
         private void tbtop_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -1247,6 +1652,27 @@ namespace xDev
             catch (Exception) { }
         }
 
+        private void tbbracelets_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (m.IsProcOpen)
+                    m.memory(OUTFIT_version, (OFFSET_bracelets + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
+            }
+            catch (Exception) { }
+        }
+
+        private void tbbraceletstexture_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (m.IsProcOpen)
+                    m.memory(OUTFIT_version, (OFFSET_bracelets + OFFSET_texture_head + ((Outfit)ddoutfitnumber.SelectedItem).Id * 0x50)).SetInt((sender as TextBox).Text);
+            }
+            catch (Exception) { }
+        }
+
+
         private void tb_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             if (sender is TextBox)
@@ -1275,6 +1701,7 @@ namespace xDev
                 tbhat.Visibility = Visibility.Visible;
                 tblegs.Visibility = Visibility.Visible;
                 tbmask.Visibility = Visibility.Visible;
+                tbbracelets.Visibility = Visibility.Visible;
 
                 ddaccessories.Visibility = Visibility.Collapsed;
                 ddbracelets.Visibility = Visibility.Collapsed;
@@ -1304,6 +1731,7 @@ namespace xDev
                 tbhat.Visibility = Visibility.Collapsed;
                 tblegs.Visibility = Visibility.Collapsed;
                 tbmask.Visibility = Visibility.Collapsed;
+                tbbracelets.Visibility = Visibility.Collapsed;
 
                 ddaccessories.Visibility = Visibility.Visible;
                 ddbracelets.Visibility = Visibility.Visible;

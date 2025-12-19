@@ -8,7 +8,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("xDev | lUiSBOzZ_RSG")]
-[assembly: AssemblyDescription("Outfit Editor Made by lUiSBOzZ_RSG")]
+[assembly: AssemblyDescription("Outfit Editor Made by lUiSBOzZ_RSG & yAmethxst")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Xenvious")]
 [assembly: AssemblyProduct("xDev | lUiSBOzZ_RSG")]
